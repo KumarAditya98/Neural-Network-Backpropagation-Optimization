@@ -16,3 +16,14 @@ First meet for objective clarification, project scope clarification and expectat
 * Medhasweta Sen - 
   * Generalize backpropagation algorithm along with Aditya Kumar. 
   * To implement - Conjugate Gradient algorithm
+
+## Project Discussion (17/04/2023) - Meeting notes:
+
+* Medhasweta Sen - 
+  * Implement PCA and other dimension reduction techniques on datasets selected by Aditya Nayak to get final usable number of features. 
+
+* Aditya Kumar - 
+  * Continue backpropagation generalization - multiple layers, multiple ransfer functions. Confirm PCA usage and benefits. 
+
+* Aditya Nayak - 
+  * Continue dataset cleaning and PCA - 
