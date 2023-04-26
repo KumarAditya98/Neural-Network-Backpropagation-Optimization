@@ -26,7 +26,7 @@ class NeuralNetwork_Backpropagation:
         final = np.array(sample).reshape(len(x), 1)
         return final
 
-    def train(self,train_data,target,learning_rate=0.1,epochs=1000):
+    def stochastic_train(self,train_data,target,learning_rate=0.1,epochs=1000):
         alpha = learning_rate
         epochs = epochs
         self.a = np.array([])
@@ -54,6 +54,51 @@ class NeuralNetwork_Backpropagation:
                 self.w1 = self.w1 - alpha*np.dot(S1,p)
                 self.b1 = self.b1 - alpha*S1
             self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+
+    def batch_train(self,train_data,target,learning_rate=0.1,epochs=1000,batch_size = None):
+        np.random.seed(self.seed)
+        if batch_size == None:
+            batch_size = len(train_data)
+        alpha = learning_rate
+        epochs = epochs
+        self.a = np.array([])
+        self.t_plot = np.array([])
+        self.epoch_error = np.array([])
+        for epochs in range(epochs):
+            error = np.array([])
+            zipped = list(zip(train_data,target))
+            np.random.shuffle(zipped)
+            batches = []
+            for i in range(0,len(train_data),batch_size):
+                batches.append(zipped[i:i+batch_size])
+            for j in range(len(batches)):
+                input, output = zip(*batches[j])
+                grad_w1 = np.zeros(self.w1.shape)
+                grad_w2 = np.zeros(self.w2.shape)
+                grad_b1 = np.zeros(self.b1.shape)
+                grad_b2 = np.zeros(self.b2.shape)
+                for p,t in zip(input,output):
+                    n1 = np.dot(self.w1, p) + self.b1
+                    a1 = self.sigmoid(n1)
+                    a2 = np.dot(self.w2, a1) + self.b2
+                    self.a = np.append(self.a,a2)
+                    self.t_plot = np.append(self.t_plot,t)
+                    error = np.append(error,(t-a2))
+                    S2 = -2 * error[-1]
+                    temp = [element for row in a1 for element in row]
+                    temp1 = [i*(1-i) for i in temp]
+                    fn1 = np.diag(temp1)
+                    S1 = np.dot(fn1,self.w2.T)*S2
+                    grad_w2 = grad_w2 + np.dot(S2,a1.T)
+                    grad_w1 = grad_w1 + np.dot(S1,p)
+                    grad_b1 = grad_b1 + S1
+                    grad_b2 = grad_b2 + S2
+                self.w2 = self.w2 - alpha*(grad_w2/len(batches[j]))
+                self.b2 = self.b2 - alpha*(grad_b2/len(batches[j]))
+                self.w1 = self.w1 - alpha*(grad_w1/len(batches[j]))
+                self.b1 = self.b1 - alpha*(grad_b1/len(batches[j]))
+            self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+
 
     def prediction(self,input):
         output = np.array([])
@@ -119,7 +164,7 @@ g = np.exp(-np.abs(p))*np.sin(np.pi*p)
 
 # Testing the neural network
 network = NeuralNetwork_Backpropagation(10)
-network.train(p,g,0.2,1000)
+network.batch_train(p,g,0.2,1000,batch_size=50)
 network.SSE_Epoch()
 network.prediction(p)
 network.NetworkOutput_Vs_Targets()
