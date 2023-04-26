@@ -99,7 +99,6 @@ class NeuralNetwork_Backpropagation:
                 self.b1 = self.b1 - alpha*(grad_b1/len(batches[j]))
             self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
 
-
     def prediction(self,input):
         output = np.array([])
         for i in input:
