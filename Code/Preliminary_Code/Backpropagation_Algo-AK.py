@@ -83,20 +83,21 @@ class NeuralNetwork_Backpropagation:
                     a2 = np.dot(self.w2, a1) + self.b2
                     self.a = np.append(self.a,a2)
                     self.t_plot = np.append(self.t_plot,t)
-                    error = np.append(error,(t-a2))
-                    S2 = -2 * error[-1]
+                    e = t-a2
+                    error = np.append(error, e)
+                    S2 = -2 * e
                     temp = [element for row in a1 for element in row]
-                    temp1 = [i*(1-i) for i in temp]
+                    temp1 = [ele*(1-ele) for ele in temp]
                     fn1 = np.diag(temp1)
                     S1 = np.dot(fn1,self.w2.T)*S2
                     grad_w2 = grad_w2 + np.dot(S2,a1.T)
                     grad_w1 = grad_w1 + np.dot(S1,p)
                     grad_b1 = grad_b1 + S1
                     grad_b2 = grad_b2 + S2
-                self.w2 = self.w2 - alpha*(grad_w2/len(batches[j]))
-                self.b2 = self.b2 - alpha*(grad_b2/len(batches[j]))
-                self.w1 = self.w1 - alpha*(grad_w1/len(batches[j]))
-                self.b1 = self.b1 - alpha*(grad_b1/len(batches[j]))
+                self.w2 = self.w2 - alpha*(grad_w2/len(input))
+                self.b2 = self.b2 - alpha*(grad_b2/len(input))
+                self.w1 = self.w1 - alpha*(grad_w1/len(input))
+                self.b1 = self.b1 - alpha*(grad_b1/len(input))
             self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
 
     def prediction(self,input):
@@ -133,14 +134,14 @@ class NeuralNetwork_Backpropagation:
         fig, ax = plt.subplots(2,1,figsize=(16,8))
         ax[0].plot(x_tick1, series3, label='Network Outputs')
         ax[0].plot(x_tick1, series4, label='Actual Targets')
-        ax[0].set_title("Network Output vs Targets - First 100 Samples")
+        ax[0].set_title("Network Output vs Targets - First Epoch")
         ax[0].set_xlabel("Sample Count")
         ax[0].set_ylabel("Outputs")
         ax[0].grid()
         ax[0].legend()
         ax[1].plot(x_tick, series1, label='Network Outputs')
         ax[1].plot(x_tick, series2, label='Actual Targets')
-        ax[1].set_title("Network Output vs Targets - Last 100 Samples")
+        ax[1].set_title("Network Output vs Targets - Last Epoch")
         ax[1].set_xlabel("Sample Count")
         ax[1].set_ylabel("Outputs")
         ax[1].grid()
@@ -160,6 +161,12 @@ class NeuralNetwork_Backpropagation:
 # Generating a synthetic function
 p = np.linspace(-2,2,100)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p)
+
+# zipped = list(zip(p,g))
+# np.random.shuffle(zipped)
+# batches = []
+# for i in range(0,len(p),50):
+#     batches.append(zipped[i:i+50])
 
 # Testing the neural network
 network = NeuralNetwork_Backpropagation(10)

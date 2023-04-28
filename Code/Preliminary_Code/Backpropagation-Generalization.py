@@ -112,3 +112,7 @@ class NeuralNetwork_Backpropagation:
         plt.legend()
         plt.grid()
         plt.show()
+
+
+
+# tan(h) = (1-a)*(1+a)
