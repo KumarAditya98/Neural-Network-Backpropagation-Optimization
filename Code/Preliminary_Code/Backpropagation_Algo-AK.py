@@ -53,7 +53,14 @@ class NeuralNetwork_Backpropagation:
                 self.b2 = self.b2 - alpha*S2
                 self.w1 = self.w1 - alpha*np.dot(S1,p)
                 self.b1 = self.b1 - alpha*S1
-            self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+            # self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+            output = self.prediction(train_data)
+            errorr = target - output
+            self.epoch_error = np.append(self.epoch_error,np.sum(errorr**2))
+            if np.abs(np.mean(errorr)) < 0.0001:
+                print(f"Algorithm has converged in: {epochs} epochs")
+                print(np.abs(np.mean(errorr)))
+                return None
 
     def batch_train(self,train_data,target,learning_rate=0.1,epochs=1000,batch_size = None):
         np.random.seed(self.seed)
@@ -98,7 +105,15 @@ class NeuralNetwork_Backpropagation:
                 self.b2 = self.b2 - alpha*(grad_b2/len(input))
                 self.w1 = self.w1 - alpha*(grad_w1/len(input))
                 self.b1 = self.b1 - alpha*(grad_b1/len(input))
-            self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+            #self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+            output = self.prediction(train_data)
+            errorr = target - output
+            self.epoch_error = np.append(self.epoch_error, np.sum(errorr ** 2))
+            if self.epoch_error[-1] < 0.01:
+                print(f"Algorithm has converged in: {epochs} epochs")
+                print(self.epoch_error[-1])
+                return None
+
 
     def prediction(self,input):
         output = np.array([])
@@ -170,7 +185,7 @@ g = np.exp(-np.abs(p))*np.sin(np.pi*p)
 
 # Testing the neural network
 network = NeuralNetwork_Backpropagation(10)
-network.batch_train(p,g,0.2,1000,batch_size=50)
+network.batch_train(p,g,0.095,3500,batch_size=100)
 network.SSE_Epoch()
 network.prediction(p)
 network.NetworkOutput_Vs_Targets()
