@@ -4,20 +4,20 @@ import pandas as pd
 
 class NeuralNetwork_Backpropagation:
     """
-    A neural network with 1 - S - 1 architecture
-    Default: Sigmoid function in Hidden Layer and Linear function in output layer
+    Generalized neural network with R - S1 - S2 - ... - Sm architecture
+    Default: Custom Activation function (Sigmoid, Tanh, Linear, Relu) can be defined in Hidden Layer
     """
-    def __init__(self,neurons,seed=6202):
-        self.neurons = neurons
+    def __init__(self,Input_neuron_list,activation_function_list,seed=6202):
+        self.n_layers = len(Input_neuron_list)
+        self.neurons = Input_neuron_list
         self.seed = seed
-        self.a = np.array([])
-        self.t_plot = np.array([])
-        self.epoch_error = np.array([])
+        self.a = np.array([]).reshape(self.neurons[-1],1)
+        self.t_plot = np.array([]).reshape(self.neurons[-1],1)
+        self.epoch_error = np.array([]).reshape(self.neurons[-1],1)
         np.random.seed(self.seed)
-        self.w1 = np.random.uniform(low=-0.5,high=0.5,size=(self.neurons,1))
-        self.b1 = np.random.uniform(-0.5,0.5,(self.neurons,1))
-        self.w2 = np.random.uniform(-0.5,0.5,(1,self.neurons))
-        self.b2 = np.random.uniform(-0.5,0.5,(1,1))
+        for i in range(len(self.neurons)):
+            setattr(self,f"w{i+1}",np.random.uniform(-0.5,0.5,(self.neurons[i+1],self.neurons[i])))
+            setattr(self,f"b{i+1}",np.random.uniform(-0.5,0.5,(self.neurons[i+1],1)))
 
     def sigmoid(self,x):
         sample = []
@@ -25,13 +25,31 @@ class NeuralNetwork_Backpropagation:
             sample.append(1 / (1 + np.exp(-x[i])))
         final = np.array(sample).reshape(len(x), 1)
         return final
+    def tanh(self,x):
+        sample = []
+        for i in range(len(x)):
+            sample.append((np.exp(x[i]) - np.exp(-x[i])) / (np.exp(x[i]) + np.exp(-x[i])))
+        final = np.array(sample).reshape(len(x), 1)
+        return final
+    def poslin(self,x):
+        sample = []
+        for i in range(len(x)):
+            if x[i] < 0:
+                sample.append(0)
+            else:
+                sample.append(x[i])
+        final = np.array(sample).reshape(len(x), 1)
+        return final
+    def lin(self,x):
+        return x
 
-    def train(self,train_data,target,learning_rate=0.1,epochs=1000):
+    # tan(h) = (1-a)*(1+a)
+    def stochastic_train(self,train_data,target,learning_rate=0.1,epochs=750):
         alpha = learning_rate
         epochs = epochs
-        self.a = np.array([])
-        self.t_plot = np.array([])
-        self.epoch_error = np.array([])
+        self.a = np.array([]).reshape(self.neurons[-1], 1)
+        self.t_plot = np.array([]).reshape(self.neurons[-1], 1)
+        self.epoch_error = np.array([]).reshape(self.neurons[-1], 1)
         for epochs in range(epochs):
             error = np.array([])
             zipped = list(zip(train_data,target))
@@ -55,8 +73,8 @@ class NeuralNetwork_Backpropagation:
                 self.b1 = self.b1 - alpha*S1
             self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
 
-    def prediction(self,input):
-        output = np.array([])
+    def prediction(self,input_matrix):
+        output = np.array([]).resha
         for i in input:
             n1 = np.dot(self.w1, i) + self.b1
             a1 = self.sigmoid(n1)
@@ -115,4 +133,3 @@ class NeuralNetwork_Backpropagation:
 
 
 
-# tan(h) = (1-a)*(1+a)
