@@ -2,84 +2,134 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-class NeuralNetwork_Backpropagation:
+class Generalized_NeuralNetwork_Backpropagation:
     """
     Generalized neural network with R - S1 - S2 - ... - Sm architecture
-    Default: Custom Activation function (Sigmoid, Tanh, Linear, Relu) can be defined in Hidden Layer
+    Default: Custom Activation function (Sigmoid, Tanh, Linear, Relu, Softmax) can be defined in Hidden Layer
     """
     def __init__(self,Input_neuron_list,activation_function_list,seed=6202):
         self.n_layers = len(Input_neuron_list)
         self.neurons = Input_neuron_list
+        self.activation_list = activation_function_list
         self.seed = seed
-        self.a = np.array([]).reshape(self.neurons[-1],1)
-        self.t_plot = np.array([]).reshape(self.neurons[-1],1)
-        self.epoch_error = np.array([]).reshape(self.neurons[-1],1)
         np.random.seed(self.seed)
-        for i in range(len(self.neurons)):
+        self.w_list = []
+        self.b_list = []
+        for i in range(len(self.neurons)-1):
             setattr(self,f"w{i+1}",np.random.uniform(-0.5,0.5,(self.neurons[i+1],self.neurons[i])))
+            self.w_list.append(getattr(self,f"w{i+1}"))
             setattr(self,f"b{i+1}",np.random.uniform(-0.5,0.5,(self.neurons[i+1],1)))
-
-    def sigmoid(self,x):
+            self.b_list.append(getattr(self,f"b{i+1}"))
+    def sigmoid(self,x, derivative = False):
         sample = []
-        for i in range(len(x)):
-            sample.append(1 / (1 + np.exp(-x[i])))
+        if not(derivative):
+            for i in range(len(x)):
+                sample.append(1 / (1 + np.exp(-x[i])))
+        else:
+            for i in range(len(x)):
+                sample.append((np.exp(-x[i]))/((1+np.exp(-x[i]))**2))
         final = np.array(sample).reshape(len(x), 1)
         return final
-    def tanh(self,x):
+    def tanh(self,x,derivative = False):
+        sample = []
+        if not(derivative):
+            for i in range(len(x)):
+                sample.append((np.exp(x[i]) - np.exp(-x[i])) / (np.exp(x[i]) + np.exp(-x[i])))
+                final = np.array(sample).reshape(len(x), 1)
+                return final
+        else:
+            return 1.-np.tanh(x)**2
+    def relu(self,x,derivative=False):
         sample = []
         for i in range(len(x)):
-            sample.append((np.exp(x[i]) - np.exp(-x[i])) / (np.exp(x[i]) + np.exp(-x[i])))
-        final = np.array(sample).reshape(len(x), 1)
-        return final
-    def poslin(self,x):
-        sample = []
-        for i in range(len(x)):
-            if x[i] < 0:
-                sample.append(0)
+            if not(derivative):
+                if x[i] < 0:
+                    sample.append(0)
+                else:
+                    sample.append(x[i])
             else:
-                sample.append(x[i])
+                if x[i] <= 0:
+                    sample.append(0)
+                else:
+                    sample.append(1)
         final = np.array(sample).reshape(len(x), 1)
         return final
-    def lin(self,x):
-        return x
-
-    # tan(h) = (1-a)*(1+a)
+    def lin(self,x,derivative=False):
+        if not(derivative):
+            return x
+        else:
+            return 1
+    def softmax(x,derivative=False):
+        # for stability, values shifted down so max = 0
+        exp_shifted = np.exp(x - x.max())
+        if not(derivative):
+            return exp_shifted / np.sum(exp_shifted, axis=0)
+        else:
+            return exp_shifted / np.sum(exp_shifted, axis=0) * (1 - exp_shifted / np.sum(exp_shifted, axis=0))
+    def activation_choice(self, function, x,derivative=False):
+        if function == 'tanh':
+            return self.tanh(x,derivative)
+        elif function == 'relu':
+            return self.relu(x,derivative)
+        elif function == 'sigmoid':
+            return self.sigmoid(x,derivative)
+        elif function == 'softmax':
+            return self.softmax(x,derivative)
+        else:
+            return self.lin(x,derivative)
     def stochastic_train(self,train_data,target,learning_rate=0.1,epochs=750):
         alpha = learning_rate
         epochs = epochs
-        self.a = np.array([]).reshape(self.neurons[-1], 1)
-        self.t_plot = np.array([]).reshape(self.neurons[-1], 1)
-        self.epoch_error = np.array([]).reshape(self.neurons[-1], 1)
-        for epochs in range(epochs):
-            error = np.array([])
+        self.NNOP = np.empty((len(train_data),self.neurons[-1]))
+        self.t_plot = np.empty((len(train_data),self.neurons[-1]))
+        self.epoch_error = np.empty((epochs,len(train_data),self.neurons[-1]))
+        for epoch in range(epochs):
+            error = np.empty((self.neurons[-1], len(train_data)))
             zipped = list(zip(train_data,target))
             np.random.shuffle(zipped)
             input, output = zip(*zipped)
+            index = 0
             for p,t in zip(input,output):
-                n1 = np.dot(self.w1, p) + self.b1
-                a1 = self.sigmoid(n1)
-                a2 = np.dot(self.w2, a1) + self.b2
-                self.a = np.append(self.a,a2)
-                self.t_plot = np.append(self.t_plot,t)
-                error = np.append(error,(t-a2))
-                S2 = -2 * error[-1]
-                temp = [element for row in a1 for element in row]
-                temp1 = [i*(1-i) for i in temp]
-                fn1 = np.diag(temp1)
-                S1 = np.dot(fn1,self.w2.T)*S2
-                self.w2 = self.w2 - alpha*np.dot(S2,a1.T)
-                self.b2 = self.b2 - alpha*S2
-                self.w1 = self.w1 - alpha*np.dot(S1,p)
-                self.b1 = self.b1 - alpha*S1
-            self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+                n = {i + 1: None for i in range(len(self.activation_list))}
+                n[1] = np.dot(self.w1, np.array(p).reshape(len(p), 1)) + self.b1
+                a = {i + 1: None for i in range(len(self.activation_list))}
+                a[0] = np.array(p).reshape(len(p), 1)
+                a[1] = self.activation_choice(self.activation_list[0], n[1])
+                for i in range(len(self.activation_list) - 1):
+                    n[i+2] = np.dot(self.w_list[i + 1], a[i + 1]) + self.b_list[i + 1]
+                    a[i+2] = self.activation_choice(self.activation_list[i + 1], n[i + 2])
+                self.NNOP[index] = a[list(a)[-1]].ravel()
+                self.t_plot[index] = t.ravel()
+                error[:,index] = np.ravel(np.array(t).reshape(len(t),1)-a[list(a)[-1]])
+                s = {i:None for i in range(len(self.neurons)-1)}
+                F_n_last = self.activation_choice(self.activation_list[-1],n[list(n)[-1]],derivative=True)
+                Fn = np.diag([element for row in F_n_last for element in row])
+                s[0] = -2 * np.dot(Fn,error[:,index].reshape(self.neurons[-1],1))
+                for i in range(len(self.activation_list)-1):
+                    F_n = self.activation_choice(self.activation_list[-1-(i+1)], n[list(n)[-1-(i+1)]], derivative=True)
+                    Fn_ = np.diag([element for row in F_n for element in row])
+                    s[i+1] = np.dot(np.dot(Fn_,self.w_list[-1-i].T),s[i])
+                for i in range(len(self.w_list)):
+                    self.w_list[i] -= alpha*np.dot(s[list(s)[-1-i]],a[i].T)
+                    setattr(self,f"w{i+1}",self.w_list[i])
+                    self.b_list[i] -= alpha*s[list(s)[-1-i]]
+                    setattr(self, f"b{i + 1}", self.b_list[i])
+                index += 1
+            self.epoch_error[epoch] = error.T
 
-    def prediction(self,input_matrix):
-        output = np.array([]).resha
-        for i in input:
-            n1 = np.dot(self.w1, i) + self.b1
-            a1 = self.sigmoid(n1)
-            a2 = np.dot(self.w2, a1) + self.b2
-            output = np.append(output,a2)
+    def prediction(self,input):
+        output = np.empty((len(input),self.neurons[-1]))
+        index = 0
+        for row in input:
+            n = {i+1:None for i in range(len(self.activation_list))}
+            n[1] = np.dot(self.w1, np.array(row).reshape(len(row),1)) + self.b1
+            a = {i + 1: None for i in range(len(self.activation_list))}
+            a[1] = self.activation_choice(self.activation_list[0],n[1])
+            for i in range(len(self.activation_list)-1):
+                n[i+2] = np.dot(self.w_list[i+1], a[i+1]) + self.b_list[i+1]
+                a[i+2] = self.activation_choice(self.activation_list[i+1],n[i+2])
+            output[index] = a[list(a)[-1]].ravel()
+            index += 1
         return output
 
     def SSE_Epoch(self):
@@ -131,5 +181,14 @@ class NeuralNetwork_Backpropagation:
         plt.grid()
         plt.show()
 
+# Feedforward test
+network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'])
+# p = np.array([[1, 1, 2, 2, -1, -2, -1, -2 ],
+#               [1, 2, -1, 0, 2, 1, -1, -2]])
+# t = np.array([[-1, -1, -1, -1, 1, 1, 1 , 1],
+#               [-1, -1, 1 ,1, -1, -1, 1, 1]])
 
-
+p = np.linspace(-2,2,100).reshape(100,1)
+g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
+network.stochastic_train(p,t,epochs=1000)
+network.prediction(p)
