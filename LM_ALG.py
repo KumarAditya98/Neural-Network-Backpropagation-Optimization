@@ -80,3 +80,50 @@ def levenberg_marquardt_backpropagation(X, Y, hidden_layer_sizes, activation='ta
             iter_num += 1
 
     return weights
+
+
+# WORKING 2.O
+
+import numpy as np
+
+
+def levenberg_marquardt(f, jacobian, x0, y, lamda=0.01, tol=1e-6, max_iter=100):
+    """Implementation of the Levenberg-Marquardt algorithm for nonlinear least squares."""
+
+    # Initialize variables
+    x = x0.copy()
+    fx = f(x)
+    J = jacobian(x)
+    A = np.dot(J.T, J)
+    g = np.dot(J.T, y - fx)
+    nu = 2.0
+    iter_num = 0
+
+    # Iterate until convergence or max iterations reached
+    while np.linalg.norm(g) > tol and iter_num < max_iter:
+        # Compute the LM parameter
+        diag_A = np.diag(A)
+        diag_A += lamda * np.max(diag_A)
+        lm = np.linalg.solve(np.diag(diag_A), g)
+
+        # Update the parameters
+        x_new = x + lm
+        fx_new = f(x_new)
+        rho = (np.linalg.norm(y - fx) ** 2 - np.linalg.norm(y - fx_new) ** 2) / np.dot(lm.T, (lamda * lm + g))
+
+        if rho > 0:
+            x = x_new
+            fx = fx_new
+            J = jacobian(x)
+            A = np.dot(J.T, J)
+            g = np.dot(J.T, y - fx)
+            lamda = lamda * max(1.0 / 3.0, 1.0 - (2.0 * rho - 1.0) ** 3)
+            nu = 2.0
+        else:
+            lamda = lamda * nu
+            nu = 2.0 * nu
+        iter_num += 1
+
+    return x
+
+
