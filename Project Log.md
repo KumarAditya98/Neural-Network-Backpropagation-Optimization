@@ -1,6 +1,6 @@
 <h1><center>Aditya Nayak project Log</center></h1>
 <ol>
-  <li><b>Date: April 10 2023</b></p></li>
+  <li><b>April 10 2023</b></p></li>
   <ol>
   <li>Had first meeting with team members.</li>
   <li>Divided project tasks among each other.</li>
