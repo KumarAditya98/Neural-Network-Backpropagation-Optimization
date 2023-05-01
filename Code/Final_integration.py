@@ -518,3 +518,8 @@ class Generalized_NeuralNetwork_Backpropagation:
         plt.legend()
         plt.tight_layout()
         plt.show()
+p = np.linspace(-2,2,100).reshape(100,1)
+g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
+
+network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'],seed=6313)
+network.train(p,g,1000,optimizer = 'conjugate_gradient')

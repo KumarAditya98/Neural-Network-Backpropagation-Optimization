@@ -184,7 +184,7 @@ g = np.exp(-np.abs(p))*np.sin(np.pi*p)
 #     batches.append(zipped[i:i+50])
 
 # Testing the neural network
-network2 = NeuralNetwork_Backpropagation(10)
+network2 = NeuralNetwork_Backpropagation(2)
 network2.stochastic_train(p,g,0.2,600)
 network2.SSE_Epoch()
 network2.NetworkOutput_Vs_Targets()

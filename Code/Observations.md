@@ -23,7 +23,7 @@
 * Successfully created the Jakobian!!
 * Now all thats left to is to extract the parameter updates from the delta_x and follow the pseudo code.
 
-* Successfully developed levenberg marqardt algorithm. However, for the function approximation dummy problem, the algorithm is getting stuck in a local minima or saddly point as the SSE doesn't seem to go down much once there. 
+* Successfully developed levenberg marqardt algorithm. However, for the function approximation dummy problem, the algorithm is getting stuck in a local minima or saddle point as the SSE doesn't seem to go down much once there. 
 * Experimenting by tweaking, mu_max, convergence criteria, number of iterations
 * Algorithm was able to converge in mere 12 epochs after different weight and bias intitialization was chosen!!
 * I was using the same seed repeatedly and therefore, the weights and biases were initializing to the same values and getting stuck in the same local minima/saddle point.

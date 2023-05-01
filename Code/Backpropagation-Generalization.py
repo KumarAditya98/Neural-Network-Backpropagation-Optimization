@@ -401,13 +401,13 @@ class Generalized_NeuralNetwork_Backpropagation:
 # # network.SSE_Epoch()
 # network.LM_algo(p,g)
 
-# p = np.linspace(-2,2,100).reshape(100,1)
-# g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
-# network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'],seed=6313)
-# network.stochastic_train(p,g,1000)
-# network.SSE_Epoch()
+p = np.linspace(-2,2,100).reshape(100,1)
+g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
+network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'],seed=6313)
+network.stochastic_train(p,g,epochs = 300,learning_rate=0.2)
+network.SSE_Epoch()
 
-network = Generalized_NeuralNetwork_Backpropagation([1,1,1],['square','linear'],manual_input=True)
-p = np.array([1,2]).reshape(2,1)
-network.LM_algo(p,p)
+# network = Generalized_NeuralNetwork_Backpropagation([1,1,1],['square','linear'],manual_input=True)
+# p = np.array([1,2]).reshape(2,1)
+# network.LM_algo(p,p)
 
