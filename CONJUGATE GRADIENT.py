@@ -193,8 +193,8 @@ class Generalized_NeuralNetwork_Backpropagation:
         fig, ax = plt.subplots(figsize=(16,8))
         ax.plot(x_tick, series, label='Sum Squared Error')
         ax.set_title("SSE Error Plot")
-        ax.set_xlabel("Log Scale for SSE Error")
-        ax.set_ylabel("Log Scale for Epochs")
+        ax.set_ylabel("Log Scale for SSE Error")
+        ax.set_xlabel("Log Scale for Epochs")
         plt.xscale("log")
         plt.yscale("log")
         plt.grid()
@@ -207,6 +207,6 @@ network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'
 p = np.linspace(-2,2,100).reshape(100,1)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
 #network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
-network.batch_train(p,g,learning_rate=0.20,epochs=10,batch_size=1)
+network.batch_train(p,g,learning_rate=0.095,epochs=10000,batch_size=20)
 network.prediction(p)[:5]
 network.SSE_Epoch()
