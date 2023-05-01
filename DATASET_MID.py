@@ -1,11 +1,4 @@
-#<<<<<<< Updated upstream
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[1]:
-
-#=======
-#>>>>>>> Stashed changes
 
 import numpy as np
 import pandas as pd
@@ -162,16 +155,4 @@ pcs_df = pd.DataFrame(X_pca1,columns=cols)
 pcs_df["y"] = Y1
 
 pcs_df.to_csv("Dataset(Medium).csv")
-#=======
 
-from sklearn.decomposition import PCA
-pca1 = PCA(n_components = 11)
-X_pca1 = pca1.fit_transform(X1)
-X_pca1.shape
-
-
-# In[16]:
-
-
-pcs_df.to_csv("Dataset(Medium).csv")
-#>>>>>>> Stashed changes

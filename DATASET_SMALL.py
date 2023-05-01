@@ -27,7 +27,7 @@ df3.head()
 # In[29]:
 
 
-dfSummary(df3)
+print(df3.describe())
 
 
 # In[30]:
@@ -40,16 +40,6 @@ dfSummary(df3)
 df3 = df3.dropna()
 # In[31]:
 
-#=======
-
-# In[31]:
-
-import numpy as np
-import pandas as pd
-from summarytools import dfSummary
-import seaborn as sns
-import matplotlib.pyplot as plt
-pd.set_option('display.max_columns', None)
 
 #>>>>>>> Stashed changes
 
@@ -117,15 +107,3 @@ pcs_df["y"] = Y3
 
 
 pcs_df.to_csv("Dataset(Small).csv")
-#=======
-pca3 = PCA(n_components = 4)
-X_pca3 = pca3.fit_transform(X2)
-X_pca3.shape
-
-
-# In[35]:
-
-
-df3.to_csv("Dataset(Small).csv")
-#>>>>>>> Stashed changes
-
