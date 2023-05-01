@@ -78,6 +78,40 @@ class Generalized_NeuralNetwork_Backpropagation:
         else:
             return self.lin(x,derivative)
 
+
+    def calculate_gradient(self, p, t):
+        n = {i + 1: None for i in range(len(self.activation_list))}
+        n[1] = np.dot(self.w1, np.array(p).reshape(len(p), 1)) + self.b1
+        a = {i: None for i in range(len(self.activation_list) + 1)}
+        a[0] = np.array(p).reshape(len(p), 1)
+        a[1] = self.activation_choice(self.activation_list[0], n[1])
+        for i in range(len(self.activation_list) - 1):
+            n[i + 2] = np.dot(getattr(self, f'w{i + 2}'), a[i + 1]) + getattr(self, f'b{i + 2}')
+            a[i + 2] = self.activation_choice(self.activation_list[i + 1], n[i + 2])
+
+        # Calculate the error and delta
+        error = t - a[len(self.activation_list)]
+        delta = error * self.activation_choice(self.activation_list[-1], n[len(self.activation_list)])
+
+        # Backpropagate delta to calculate gradients
+        gradients = {}
+        for i in reversed(range(1, len(self.activation_list) + 1)):
+            if i == len(self.activation_list):
+                gradients[f'w{i}'] = np.dot(delta, a[i].T)
+            else:
+                delta = np.dot(getattr(self, f'w{i + 1}').T, delta) * self.activation_choice(
+                    self.activation_list[i - 1], n[i])
+                gradients[f'w{i}'] = np.dot(delta, a[i].T)
+
+            gradients[f'b{i}'] = delta
+
+        # Flatten and concatenate the gradients into a single vector
+        gradient_vector = np.concatenate(
+            [gradients[f'w{i}'].flatten() for i in range(1, len(self.activation_list) + 1)] +
+            [gradients[f'b{i}'].flatten() for i in range(1, len(self.activation_list) + 1)])
+
+        return gradient_vector
+
     def stochastic_train(self, train_data, target, learning_rate=0.1, epochs=750):
         np.random.seed(self.seed)
         alpha = learning_rate
@@ -206,7 +240,7 @@ class Generalized_NeuralNetwork_Backpropagation:
 network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'])
 p = np.linspace(-2,2,100).reshape(100,1)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
-#network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
-network.batch_train(p,g,learning_rate=0.095,epochs=10000,batch_size=20)
+network.stochastic_train(p,g,learning_rate=0.2,epochs=100)
+network.batch_train(p,g,learning_rate=0.095,epochs=100,batch_size=20)
 network.prediction(p)[:5]
 network.SSE_Epoch()

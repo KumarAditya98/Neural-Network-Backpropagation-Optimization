@@ -173,5 +173,5 @@ X_pca1.shape
 # In[16]:
 
 
-df1.to_csv("Dataset(Medium).csv")
+pcs_df.to_csv("Dataset(Medium).csv")
 #>>>>>>> Stashed changes
