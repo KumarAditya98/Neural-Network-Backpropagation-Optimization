@@ -1,11 +1,11 @@
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 #!/usr/bin/env python
 # coding: utf-8
 
 # In[1]:
 
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
 
 import numpy as np
 import pandas as pd
@@ -14,12 +14,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 pd.set_option('display.max_columns', None)
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 # In[28]:
 
 
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
 df3 = pd.read_csv("Housing.csv")
 df3.head()
 
@@ -36,11 +36,11 @@ dfSummary(df3)
 df3 = df3.drop(['longitude','latitude','ocean_proximity'],axis = 1)
 dfSummary(df3)
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 df3 = df3.dropna()
 # In[31]:
 
-=======
+#=======
 
 # In[31]:
 
@@ -51,7 +51,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 pd.set_option('display.max_columns', None)
 
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 for i in range(len(df3.columns)):
     sns.boxplot(x = df3[df3.columns[i]])
@@ -66,11 +66,11 @@ for i in range(len(df3.columns)):
 fig, ax = plt.subplots(figsize=(20, 15))
 corr_matrix3 = df3.corr()
 sns.heatmap(corr_matrix3, cmap='coolwarm', annot=True, fmt='.2f', ax = ax, linewidths=0.5)
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 plt.show()
-=======
+#=======
 
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 # In[33]:
 
@@ -82,7 +82,7 @@ Y3 = df3['median_house_value']
 # In[34]:
 
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 # In[15]:
 
 from sklearn.preprocessing import StandardScaler
@@ -117,7 +117,7 @@ pcs_df["y"] = Y3
 
 
 pcs_df.to_csv("Dataset(Small).csv")
-=======
+#=======
 pca3 = PCA(n_components = 4)
 X_pca3 = pca3.fit_transform(X2)
 X_pca3.shape
@@ -127,5 +127,5 @@ X_pca3.shape
 
 
 df3.to_csv("Dataset(Small).csv")
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 

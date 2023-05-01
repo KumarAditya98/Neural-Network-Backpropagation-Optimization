@@ -1,11 +1,11 @@
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 #!/usr/bin/env python
 # coding: utf-8
 
 # In[1]:
 
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
 
 import numpy as np
 import pandas as pd
@@ -19,8 +19,8 @@ pd.set_option('display.max_columns', None)
 
 
 df1 = pd.read_csv("Spotify_Youtube.csv")
-<<<<<<< Updated upstream
-=======
+#<<<<<<< Updated upstream
+#=======
 print(df1.head().to_string())
 
 
@@ -35,21 +35,21 @@ print(df1.describe().to_string())
 
 col = df1.columns
 print(col)
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 
 # In[5]:
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
 df1 = df1.drop(['Unnamed: 0', 'Artist', 'Url_spotify', 'Track', 'Album', 'Album_type','Uri','Url_youtube','Title',
                 'Channel','Description', 'Licensed', 'official_video'], axis = 1)
 
 
-<<<<<<< Updated upstream
-=======
+#<<<<<<< Updated upstream
+#=======
 # In[6]:
 
 
@@ -59,15 +59,15 @@ print(df1.head().to_string())
 # In[7]:
 
 
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 df1.Views.fillna(df1.Views.median(),inplace=True)
 df1.Likes.fillna(df1.Likes.median(),inplace=True)
 df1.Comments.fillna(df1.Comments.median(),inplace=True)
 df1.Stream.fillna(df1.Stream.median(),inplace=True)
 
 
-<<<<<<< Updated upstream
-=======
+#<<<<<<< Updated upstream
+#=======
 # In[8]:
 
 
@@ -77,7 +77,7 @@ print(df1.describe().to_string())
 # In[9]:
 
 
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 df1 = df1.dropna()
 
 
@@ -91,19 +91,13 @@ print(df1.describe().to_string())
 
 
 for i in range(len(df1.columns)):
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
     sns.boxplot(x = df1[df1.columns[i]])
     plt.title(f"Distribution of {df1.columns[i]}")
     plt.xlabel(df1.columns[i])
     plt.show()
-=======
-   plt.subplots()
-   plt.figure(figsize= (16,8))
-   sns.boxplot(x = df1[df1.columns[i]])
-   plt.title(f"Distribution of {df1.columns[i]}")
-   plt.xlabel(df1.columns[i])
-   plt.show()
->>>>>>> Stashed changes
+
+#>>>>>>> Stashed changes
 
 
 # In[12]:
@@ -112,20 +106,20 @@ for i in range(len(df1.columns)):
 fig, ax = plt.subplots(figsize=(20, 15))
 corr_matrix1 = df1.corr()
 sns.heatmap(corr_matrix1, cmap='coolwarm', annot=True, fmt='.2f', ax = ax, linewidths=0.5)
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 
-=======
+#=======
 plt.show()
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 # In[13]:
 
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 df1.columns
-=======
+#=======
 print(df1.columns)
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
 
 
 # In[14]:
@@ -137,7 +131,7 @@ Y1 = df1['Views']
 
 # In[15]:
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 from sklearn.preprocessing import StandardScaler
 
 # Standardize the data
@@ -168,7 +162,7 @@ pcs_df = pd.DataFrame(X_pca1,columns=cols)
 pcs_df["y"] = Y1
 
 pcs_df.to_csv("Dataset(Medium).csv")
-=======
+#=======
 
 from sklearn.decomposition import PCA
 pca1 = PCA(n_components = 11)
@@ -180,4 +174,4 @@ X_pca1.shape
 
 
 df1.to_csv("Dataset(Medium).csv")
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
