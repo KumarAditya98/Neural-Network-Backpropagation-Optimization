@@ -33,3 +33,7 @@
 * I would like to add a verbose type feature in my custom training codes so that the status of training can be viewed easily.
 * Create an interactive dash enable dashboard that will display the findings of this project effectively.
 * LM Algo - After observing the LM algo issue, it has become clear how it is important to initialize the network with different weights and biases to get optimum results and avoid saddle point/local minima issues. Therefore, another added feature in my code could be, multiple seed initializations and picking the lowest SSE score/scores model.
+* Time complexity comparison in backend execution.
+* Another added argument that takes in the metric argument - Typically SSE for classification and MSE for regression.
+* Perform in-depth comparison using previously defined criterias.
+* Comparison with conventional models.
