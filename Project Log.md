@@ -7,4 +7,8 @@
   <li>Undertook the task of Data collection, Data Cleaning, PCA.</li>
   <li>Tasked to implement Variable Learning Rate with SGD Momentum</li>
   </ol>
+  <li><b>April 26 2023</b></li>
+  <ol>
+  <li>Started revising theory concepts of momentum</li>
+  <li>Started revising theory concepls of variable learning rate</li>
 </ol>
