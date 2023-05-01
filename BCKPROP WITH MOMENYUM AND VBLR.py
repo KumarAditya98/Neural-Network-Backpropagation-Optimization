@@ -78,11 +78,11 @@ class Generalized_NeuralNetwork_Backpropagation:
         else:
             return self.lin(x,derivative)
 
-    def stochastic_train(self, train_data, target, learning_rate=0.1, epochs=750):
+    def stochastic_train(self, train_data, target, learning_rate=0.1, epochs=750, momentum=0.9):
         np.random.seed(self.seed)
-        alpha = learning_rate
         epochs = epochs
         self.epoch_error = np.empty((epochs, len(train_data), self.neurons[-1]))
+        alpha = learning_rate
         for epoch in range(epochs):
             error = np.empty((self.neurons[-1], len(train_data)))
             zipped = list(zip(train_data, target))
@@ -99,31 +99,38 @@ class Generalized_NeuralNetwork_Backpropagation:
                     n[i + 2] = np.dot(getattr(self, f"w{i + 2}"), a[i + 1]) + getattr(self, f"b{i + 2}")
                     a[i + 2] = self.activation_choice(self.activation_list[i + 1], n[i + 2])
                 error[:, index] = np.ravel(np.array(t).reshape(len(t), 1) - a[list(a)[-1]])
-                grad = self.calculate_gradient(p, t)
-                if index == 0:
-                    s = -grad
-                    delta_new = np.dot(s.T, s)
-                else:
-                    delta_old = delta_new
-                    delta_mid = np.dot(s.T, grad - grad_old) / delta_old
-                    r = grad - grad_old - delta_mid * s
-                    delta_new = np.dot(r.T, r)
-                    beta = delta_new / delta_old
-                    s = -grad + beta * s
+                s = {i: None for i in range(1, len(self.activation_list) + 1)}
+                F_n_last = self.activation_choice(self.activation_list[-1], n[list(n)[-1]], derivative=True)
+                Fn = np.diag([element for row in F_n_last for element in row])
+                s[list(s)[-1]] = -2 * np.dot(Fn, error[:, index].reshape(self.neurons[-1], 1))
+                for i in range(len(self.activation_list) - 1):
+                    F_n = self.activation_choice(self.activation_list[-2 - i], n[list(n)[-2 - i]], derivative=True)
+                    Fn_ = np.diag([element for row in F_n for element in row])
+                    s[list(s)[-2 - i]] = np.dot(np.dot(Fn_, self.w_list[-1 - i].T), s[list(s)[-1 - i]])
+
+                # Update weights and biases
+                alpha = learning_rate / (1 + epoch / 1000)  # Variable learning rate
                 for i in range(len(self.w_list)):
-                    self.w_list[i] = self.w_list[i] + alpha * np.dot(s[list(s)[i]], a[i].T)
+                    dw = np.dot(s[list(s)[i]], a[i].T)
+                    self.v_w_list[i] = momentum * self.v_w_list[i] + alpha * dw  # Add momentum
+                    self.w_list[i] -= self.v_w_list[i]
                     setattr(self, f"w{i + 1}", self.w_list[i])
-                    self.b_list[i] = self.b_list[i] + alpha * s[list(s)[i]]
+                    db = s[list(s)[i]]
+                    self.v_b_list[i] = momentum * self.v_b_list[i] + alpha * db  # Add momentum
+                    self.b_list[i] -= self.v_b_list[i]
                     setattr(self, f"b{i + 1}", self.b_list[i])
-                grad_old = grad
+
                 index += 1
             self.epoch_error[epoch] = error.T ** 2
 
-    def batch_train(self, train_data, target,learning_rate, epochs=750, batch_size=None):
+    def batch_train(self, train_data, target, learning_rate=0.1, epochs=750, batch_size=None, beta=0.9, lr_decay=0.001):
         np.random.seed(self.seed)
         if batch_size is None:
             batch_size = len(train_data)
+        alpha = learning_rate
         epochs = epochs
+        v_w = {i + 1: np.zeros(getattr(self, f"w{i + 1}").shape) for i in range(len(self.w_list))}
+        v_b = {i + 1: np.zeros(getattr(self, f"b{i + 1}").shape) for i in range(len(self.b_list))}
         self.epoch_error = np.empty((epochs, len(train_data), self.neurons[-1]))
         for epoch in range(epochs):
             error = np.empty((self.neurons[-1], len(train_data)))
@@ -138,8 +145,6 @@ class Generalized_NeuralNetwork_Backpropagation:
                 input, output = zip(*batches[j])
                 grad_w = {i + 1: np.zeros(getattr(self, f"w{i + 1}").shape) for i in range(len(self.w_list))}
                 grad_b = {i + 1: np.zeros(getattr(self, f"b{i + 1}").shape) for i in range(len(self.b_list))}
-                p_k = {i + 1: np.zeros(getattr(self, f"w{i + 1}").shape) for i in range(len(self.w_list))}
-                r_k = {i + 1: np.zeros(getattr(self, f"w{i + 1}").shape) for i in range(len(self.w_list))}
                 for p, t in zip(input, output):
                     n = {i + 1: None for i in range(len(self.activation_list))}
                     n[1] = np.dot(self.w1, np.array(p).reshape(len(p), 1)) + self.b1
@@ -159,18 +164,19 @@ class Generalized_NeuralNetwork_Backpropagation:
                         Fn_ = np.diag([element for row in F_n for element in row])
                         s[list(s)[-2 - i]] = np.dot(np.dot(Fn_, self.w_list[-1 - i].T), s[list(s)[-1 - i]])
                     for i in range(len(self.w_list)):
-                        grad_w[i + 1] += np.dot(s[list(s)[i]], a[i].T)
-                        grad_b[i + 1] += s[list(s)[i]]
-                    index += 1
-                for i in range(len(self.w_list)):
-                    self.w_list[i] = self.w_list[i] - learning_rate*(grad_w[i+1]/len(input))
-                    setattr(self,f"w{i+1}",self.w_list[i])
-                    self.b_list[i] = self.b_list[i] - learning_rate*(grad_b[i+1]/len(input))
-                    setattr(self, f"b{i+1}", self.b_list[i])
-                output = self.prediction(train_data)
-                errorr = target - output
-                batch_error[:, j] = np.ravel(np.sum(errorr**2))
-            self.epoch_error[epoch] = np.sum(batch_error.T**2)
+                        v_w[i + 1] = beta * v_w[i + 1] + (1 - beta) * grad_w[i + 1]
+                        v_b[i + 1] = beta * v_b[i + 1] + (1 - beta) * grad_b[i + 1]
+                        setattr(self, f"w{i + 1}", getattr(self, f"w{i + 1}") - alpha * (v_w[i + 1] / len(input)))
+                        setattr(self, f"b{i + 1}", getattr(self, f"b{i + 1}") - alpha * (v_b[i + 1] / len(input)))
+
+                    batch_error[:, j] = np.sum(error ** 2, axis=1)
+                    index += batch_size
+
+                    self.epoch_error[epoch] = np.sum(batch_error.reshape(-1,1), axis=0)
+
+                    alpha = alpha / (1 + lr_decay * epoch)
+
+                return self.epoch_error[:epoch + 1]
 
     def prediction(self,input):
         output = np.empty((len(input),self.neurons[-1]))
@@ -206,7 +212,7 @@ class Generalized_NeuralNetwork_Backpropagation:
 network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'])
 p = np.linspace(-2,2,100).reshape(100,1)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
-#network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
-network.batch_train(p,g,learning_rate=0.20,epochs=10,batch_size=1)
+# network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
+network.batch_train(p,g,learning_rate=0.01,epochs=15000,batch_size=20)
 network.prediction(p)[:5]
 network.SSE_Epoch()
