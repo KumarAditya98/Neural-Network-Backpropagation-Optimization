@@ -19,5 +19,6 @@
   <li><b>April 30 2023</b></li>
   <ol>
   <li>Failed to implement code of variable learning rate using momentum.</li>
-  <li>My teammate Aditya Kumar took over the task and completed it successfully.</li>
+  <li>Decided to remove from comparison with other algorithms.</li>
+  <li>Began working on the group project report.</li>
 </ol>
