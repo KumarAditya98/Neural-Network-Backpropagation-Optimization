@@ -1,8 +1,11 @@
+<<<<<<< Updated upstream
 #!/usr/bin/env python
 # coding: utf-8
 
 # In[1]:
 
+=======
+>>>>>>> Stashed changes
 
 import numpy as np
 import pandas as pd
@@ -10,10 +13,30 @@ from summarytools import dfSummary
 import seaborn as sns
 import matplotlib.pyplot as plt
 pd.set_option('display.max_columns', None)
+<<<<<<< Updated upstream
 # In[17]:
 
 
 df2 = pd.read_csv("cancer_reg.csv")
+=======
+
+
+df2 = pd.read_csv("cancer_reg.csv")
+df2.head()
+
+
+# In[18]:
+
+
+dfSummary(df2)
+
+
+# In[19]:
+
+
+df2.columns
+
+>>>>>>> Stashed changes
 
 # In[20]:
 
@@ -31,16 +54,25 @@ df2.pctprivatecoveragealone.fillna(df2.pctprivatecoveragealone.mean(),inplace = 
 
 # In[22]:
 
+<<<<<<< Updated upstream
 df2 = df2.dropna()
 
 
 print(df2.describe().to_string())
+=======
+
+dfSummary(df2)
+>>>>>>> Stashed changes
 
 
 # In[23]:
 
 
+<<<<<<< Updated upstream
 for i in range(len(df2.columns)):
+=======
+for i in range(len(df1.columns)):
+>>>>>>> Stashed changes
     sns.boxplot(x = df2[df2.columns[i]])
     plt.title(f"Distribution of {df2.columns[i]}")
     plt.xlabel(df2.columns[i])
@@ -53,7 +85,11 @@ for i in range(len(df2.columns)):
 fig, ax = plt.subplots(figsize=(20, 15))
 corr_matrix2 = df2.corr()
 sns.heatmap(corr_matrix2, cmap='coolwarm', annot=True, fmt='.2f', ax = ax, linewidths=0.5)
+<<<<<<< Updated upstream
 plt.show()
+=======
+
+>>>>>>> Stashed changes
 
 # In[25]:
 
@@ -65,6 +101,7 @@ Y2 = df2['target_deathrate']
 # In[26]:
 
 
+<<<<<<< Updated upstream
 # In[15]:
 
 from sklearn.preprocessing import StandardScaler
@@ -95,8 +132,18 @@ plt.show()
 cols = ['PC'+str(i) for i in range(1,pca1.n_components_+1)]
 pcs_df = pd.DataFrame(X_pca1,columns=cols)
 pcs_df["y"] = Y2
+=======
+pca2 = PCA(n_components = 17)
+X_pca2 = pca2.fit_transform(X2)
+X_pca2.shape
+
+>>>>>>> Stashed changes
 
 # In[27]:
 
 
+<<<<<<< Updated upstream
 pcs_df.to_csv("Dataset(Large).csv")
+=======
+df2.to_csv("Dataset(Large).csv")
+>>>>>>> Stashed changes
