@@ -16,6 +16,7 @@
     <li>Medium (Between 10 to 15 features)</li>
     <li>Large (More than 15 errors)</li>
   </ol>
+  </ol>
   <br>
   <li><b>April 26 - 27 2023</b></li>
   <ol>
