@@ -53,10 +53,10 @@ class NeuralNetwork_Backpropagation:
                 self.b2 = self.b2 - alpha*S2
                 self.w1 = self.w1 - alpha*np.dot(S1,p)
                 self.b1 = self.b1 - alpha*S1
-            self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
-            # output = self.prediction(train_data)
-            # errorr = target - output
-            # self.epoch_error = np.append(self.epoch_error,np.sum(errorr**2))
+            # self.epoch_error = np.append(self.epoch_error,np.sum(error**2))
+            output = self.prediction(train_data)
+            errorr = target - output
+            self.epoch_error = np.append(self.epoch_error,np.sum(errorr**2))
             # if np.abs(np.mean(errorr)) < 0.0001:
             #     print(f"Algorithm has converged in: {epochs} epochs")
             #     print(np.abs(np.mean(errorr)))
@@ -185,7 +185,7 @@ g = np.exp(-np.abs(p))*np.sin(np.pi*p)
 
 # Testing the neural network
 network2 = NeuralNetwork_Backpropagation(10)
-network2.batch_train(p,g,0.2,1000,batch_size=1)
+network2.stochastic_train(p,g,0.2,2000)
 network2.SSE_Epoch()
 network2.prediction(p)[:5]
 network2.NetworkOutput_Vs_Targets()

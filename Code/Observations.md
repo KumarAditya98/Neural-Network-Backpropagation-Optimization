@@ -3,8 +3,10 @@
 * However, batch training does converge in lesser number of total weight updates as compared to incremental training (tested with a small batch size of 5, total number of weight updates for network to approximate function was slightly lesser than incremental updates.)
 * SSE is not declining as smoothly as expected with batch gradient (for small batch) as we would expect. The SSE does not seem to flatline either.  
 * For full batch training, the algorithm doesn't seem to converge although the SSE flatlines after certain number of epochs. This result is not expected. With full batch, the expected gradient direction should converge toward minima. Ran the code for 10,000 epochs.
-* (Update: with full batch training, the sse is always a smooth curve. However, due to pc limitations, it seems like to achieve a comparable number of weight updates, the number of epochs need to be increased drastically which is not possible with CPU. This was tested on GPU of google cloud and the function was approximated by increasing number of epochs to 20,000)
-* For reference, incremental training seems to converge in 1000 epochs = 1000 x 100 (Input samples) = 100,000 weight updates. With batch training. 20,000 weight updates seem to approximate the function well.
+* (Update: with full batch training, the SSE plot is always a smooth curve. However, due to pc limitations, it seems like to achieve a comparable number of weight updates, the number of epochs need to be increased drastically which is not possible with CPU.)
+* Prior assumption was that batch training will take lesser number of weight updates to converge to minima
+* Update: Ran batch training for 100,000 epochs which is equivalent to 1000(epochs)*100(samples) weight updates. Incremental training SSE scores drop to 0.001 whereas batch training SSE scores drop to 3.5/4.
+* For reference, incremental training seems to converge in 1000 epochs = 1000 x 100(Input samples) = 100,000 weight updates. With batch training.
 
 
 # Neural Network Generaliziation
@@ -12,3 +14,20 @@
 * Hurdles faced: Error calculation and hence sensitivity propagation was incorrect for the longest time which was causing my weights and biases to explode and activation output to overflow. Helpful note: if weights and biases seem to explode, there is a problem with sensitivity backpropagation. This should be checked first. Additionally, error calculation should be checked.
 * Creating batch-training for generalized neural network was very simply since it had been done for a simple 1-S-1 network. 
 * With a similar thinking, the rest of the teammates are working on variable learning, momentum learning, conjugate gradient on a simple 1-s-1 network. I will be replicating their logics into the generalized neural network training. 
+* Successfully created the Jakobian!!
+* Now all thats left to is extract the parameter updates from the delta_x and follow the pseudo code.
+
+# Levenberg-Marqardt Algorithm
+* Extremely difficult to construct the Jakobian by following the Neural Network Design textbook. - Update: Have done this, will have to double-check on the calculation- Will use the textbook example to cross-check logic.
+* Added capability of entering curom weight and bias values for debugging (compared to textbook)
+* Parameter updates are also difficult as change in parameter updates (delta_x) are stored in a single array. Will have to update extract updates of each parameter and update accordingly.
+* Successfully developed levenberg marqardt algorithm. However, for the function approximation dummy problem, the algorithm is getting stuck in a local minima or saddly point as the SSE doesn't seem to go down much once there. 
+* Experimenting by tweaking, mu_max, convergence criteria, number of iterations
+* Algorithm was able to converge in mere 12 epochs after different weight and bias intitialization was chosen!!
+* I was using the same seed repeatedly and therefore, the weights and biases were initializing to the same values and getting stuck in the same local minima/saddle point.
+
+
+# Extra features
+* I would like to add a verbose type feature in my custom training codes so that the status of training can be viewed easily.
+* Create an interactive dash enable dashboard that will display the findings of this project effectively.
+* LM Algo - After observing the LM algo issue, it has become clear how it is important to initialize the network with different weights and biases to get optimum results and avoid saddle point/local minima issues. Therefore, another added feature in my code could be, multiple seed initializations and picking the lowest SSE score/scores model.
