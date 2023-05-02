@@ -8,13 +8,14 @@
   <li>Undertook the task of Data collection, Data Cleaning, PCA.</li>
   <li>Tasked to implement Variable Learning Rate with SGD Momentum</li>
   </ol>
+  <br>
   <li><b>April 13 2023</b></li>
   <ol>
   <li>Collected 3 datasets from Kaggle based on number of features:</li>
   <ol>
     <li>Small (with about 5 features)</li>
     <li>Medium (Between 10 to 15 features)</li>
-    <li>Large (More than 15 errors)</li>
+    <li>Large (More than 15 features)</li>
   </ol>
   </ol>
   <br>
@@ -24,6 +25,7 @@
   <li>Standardized datasets for using in the network.</li>
   <li>Got datasets ready for implementing on network.</li>
   </ol>
+  <br>
   <li><b>April 26 - 27 2023</b></li>
   <ol>
     <li>Started revising theory concepts of momentum</li>
