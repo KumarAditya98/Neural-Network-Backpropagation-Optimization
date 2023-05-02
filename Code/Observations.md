@@ -27,7 +27,7 @@
 * Experimenting by tweaking, mu_max, convergence criteria, number of iterations
 * Algorithm was able to converge in mere 12 epochs after different weight and bias intitialization was chosen!!
 * I was using the same seed repeatedly and therefore, the weights and biases were initializing to the same values and getting stuck in the same local minima/saddle point.
-* Uncertainty regarding what stopping criteria to use. As of now, SSE value < 0.1 is the criteria.
+* Uncertainty regarding what stopping criteria to use. As of now, SSE value < 1 is the criteria but nothing seems to converge. Stopping criteria with norm of delta_x < 0.1 also doesn't converge. Deciding these will be key steps in completing algorithm. For time being, provision has been made in making them custom set throsholds. 
 
 # Extra features
 * I would like to add a verbose type feature in my custom training codes so that the status of training can be viewed easily.

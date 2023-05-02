@@ -188,7 +188,7 @@ class Generalized_NeuralNetwork_Backpropagation:
             errorr = target - output
             self.epoch_error[epoch] = np.sum(errorr.T**2)
 
-    def LM_algo(self,train_data,target,mu=0.01,eta=10,max_iter=1000,epsilon=0.01,mu_max = 1e10):
+    def LM_algo(self,train_data,target,mu=0.01,eta=10,max_iter=1000,epsilon=0.1,mu_max = 1e10):
         """
         :param train_data: training data
         :param target: output labels
@@ -287,8 +287,8 @@ class Generalized_NeuralNetwork_Backpropagation:
             output_new = self.prediction_custom(train_data,w_temp,b_temp)
             SSE_new = np.sum((target - output_new) ** 2)
             if SSE_new < SSE:
-                #if np.linalg.norm(2*np.dot(total_jakobian.T,error.T)) < epsilon:
-                if SSE_new < 1:
+                if np.linalg.norm(2*np.dot(total_jakobian.T,error.T)) < epsilon:
+                #if SSE_new < 1:
                     self.epoch_error[iteration] = SSE_new
                     print(f"Algorithm has converged in {iteration} epoch.")
                     for i in range(len(self.w_list)):
@@ -334,7 +334,7 @@ class Generalized_NeuralNetwork_Backpropagation:
                 SSE_new = np.sum((target - output_new) ** 2)
             iteration += 1
             if iteration>=max_iter:
-                print(f"Algorithm should've converged by now. However, maximum number of epoch trainings have been breached. Saving weights and biases.")
+                print(f"Algorithm should've converged by now. Maximum number of epoch trainings have been breached. Saving weights and biases.")
                 for i in range(len(self.w_list)):
                     self.w_list[i] = w_temp[i]
                     setattr(self, f"w{i + 1}", self.w_list[i])
@@ -392,21 +392,23 @@ class Generalized_NeuralNetwork_Backpropagation:
         plt.tight_layout()
         plt.show()
 
-# Feedforward test
+# Feedforward test for generalized network
 # network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'])
-
-# # network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
-# # network.batch_train(p,g,learning_rate=0.2,epochs=1000,batch_size=100)
 # network.prediction(p)[:5]
+
+# network.stochastic_train(p,g,learning_rate=0.2,epochs=1000)
+# network.batch_train(p,g,learning_rate=0.2,epochs=1000,batch_size=100)
+
 # # network.SSE_Epoch()
 # network.LM_algo(p,g)
 
 p = np.linspace(-2,2,100).reshape(100,1)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
-network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'],seed=6313)
-network.stochastic_train(p,g,epochs = 300,learning_rate=0.2)
+network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'],seed=2345)
+network.LM_algo(p,g)
 network.SSE_Epoch()
 
+# Textbook Jakobian comparison
 # network = Generalized_NeuralNetwork_Backpropagation([1,1,1],['square','linear'],manual_input=True)
 # p = np.array([1,2]).reshape(2,1)
 # network.LM_algo(p,p)
