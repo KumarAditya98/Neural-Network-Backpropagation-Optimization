@@ -516,7 +516,7 @@ class Generalized_NeuralNetwork_Backpropagation:
     def SSE_Epoch(self):
         if self.optimizer == 'lm':
             x_tick = np.arange(0, len(self.epoch_error))
-            series = pd.Series((np.sum(self.epoch_error, axis=1).ravel()/self.train_data), index=x_tick)
+            series = pd.Series(np.abs((np.sum(self.epoch_error, axis=1).ravel())/self.train_data), index=x_tick)
             fig, ax = plt.subplots(figsize=(16, 8))
             ax.plot(x_tick, series, label='Sum Squared Error')
             ax.set_title("SSE Error Plot")
