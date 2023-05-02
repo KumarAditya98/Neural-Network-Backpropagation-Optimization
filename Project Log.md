@@ -18,6 +18,7 @@
   </ol>
   </ol>
   <br>
+  <li><b>April 15 2023</b></li>
   <li><b>April 26 - 27 2023</b></li>
   <ol>
   <li>Started revising theory concepts of momentum</li>
@@ -33,5 +34,5 @@
   <ol>
   <li>Failed to implement code of variable learning rate using momentum.</li>
   <li>Decided to remove from comparison with other algorithms.</li>
-  <li>Began working on the group project report.</li>
+  <li>Began drafting group project report.</li>
 </ol>
