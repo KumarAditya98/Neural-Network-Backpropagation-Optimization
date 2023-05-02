@@ -21,7 +21,8 @@
   <li><b>April 15 2023</b></li>
   <ol>
   <li>Performed EDA on datasets and dealt with missing values.</li>
-  <li>Processed data by performing PCA along with Medhasweta</li>
+  <li>Standardized datasets for using in the network.</li>
+  <li>Got datasets ready for implementing on network.</li>
   </ol>
   <li><b>April 26 - 27 2023</b></li>
   <ol>
