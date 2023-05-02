@@ -29,6 +29,14 @@
 * I was using the same seed repeatedly and therefore, the weights and biases were initializing to the same values and getting stuck in the same local minima/saddle point.
 * Uncertainty regarding what stopping criteria to use. As of now, SSE value < 1 is the criteria but nothing seems to converge. Stopping criteria with norm of delta_x < 0.1 also doesn't converge. Deciding these will be key steps in completing algorithm. For time being, provision has been made in making them custom set throsholds. 
 
+# Modeling
+* Mapping issues with the code.
+* X_train and y_train need to strictly follow shape rules and only numerical value rules. They are not readily usable after train_test_split.
+* The X features have been standardized, the y labels need to be standardized as well otherwise weights and biases are exploding.
+* Going to stop mdoeling analysis here due to project deadline. Will continue to work on this 
+* Update: Turns out my assumption of the dataset being cleaned was wrong. My dataset has missing values which should've been cleaned by Aditya Nayak. This is resulting in code breaking. 
+* I will have to perform everything from my end once.
+
 # Extra features
 * I would like to add a verbose type feature in my custom training codes so that the status of training can be viewed easily.
 * Create an interactive dash enable dashboard that will display the findings of this project effectively.
@@ -37,3 +45,4 @@
 * Another added argument that takes in the metric argument - Typically SSE for classification and MSE for regression.
 * Perform in-depth comparison using previously defined criterias.
 * Comparison with conventional models.
+
