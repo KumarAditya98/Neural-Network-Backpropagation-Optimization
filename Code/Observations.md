@@ -35,7 +35,7 @@
 * The X features have been standardized, the y labels need to be standardized as well otherwise weights and biases are exploding.
 * Going to stop mdoeling analysis here due to project deadline. Will continue to work on this 
 * Update: Turns out my assumption of the dataset being cleaned was wrong. My dataset has missing values which should've been cleaned by Aditya Nayak. This is resulting in code breaking. 
-* I will have to perform everything from my end once.
+* I will have to perform everything from my end once after this project submission. 
 
 # Extra features
 * I would like to add a verbose type feature in my custom training codes so that the status of training can be viewed easily.

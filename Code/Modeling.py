@@ -57,3 +57,5 @@ y_train1_scaled = scaler.fit_transform(y_train1.values.reshape(-1,1))
 y_test1_scaled = scaler.transform(y_test1.values.reshape(-1,1))
 network1.train(X_train1.values,np.array(y_train1_scaled).reshape(-1,1),learning_rate=0.001,epochs=1000,optimizer='sgd')
 network1.SSE_Epoch()
+
+# Dataset unclean - will continue work after submission.
