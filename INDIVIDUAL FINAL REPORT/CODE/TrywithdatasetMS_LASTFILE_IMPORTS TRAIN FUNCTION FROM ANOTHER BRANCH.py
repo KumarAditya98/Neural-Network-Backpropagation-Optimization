@@ -7,6 +7,8 @@ import sys
 sys.path.append('../Final_integration.py')
 from Final_integration import *
 
+# NOTE FINAL INTEGRATION IS NOT MY CODE ENTIRELY
+
 network = Generalized_NeuralNetwork_Backpropagation([1,10,1],['sigmoid','linear'])
 p = np.linspace(-2,2,100).reshape(100,1)
 g = np.exp(-np.abs(p))*np.sin(np.pi*p).reshape(100,1)
